@@ -8,16 +8,12 @@ import pandas as pd
 from datetime import datetime
 import uvicorn
 
-# ============================================================
-# INITIALISATION
-# ============================================================
 app = FastAPI(
     title="🏥 API Diagnostic Médical",
     description="API de prédiction de maladies basée sur les symptômes (BernoulliNB - 85% accuracy)",
     version="1.0.0",
 )
 
-# --- CORS CONFIGURATION ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Chargement du modèle au démarrage
+
 print("🔄 Chargement du modèle médical...")
 try:
     model_data = joblib.load("bernoulli_nb_medical_model.pkl")
@@ -47,9 +43,7 @@ except FileNotFoundError:
     diseases_list = []
     metrics = {'accuracy': 0.0}
 
-# ============================================================
-# PYDANTIC MODELS
-# ============================================================
+
 class PredictionRequest(BaseModel):
     symptoms: List[str] = Field(..., min_items=1, description="Liste des symptômes du patient")
     top_n: Optional[int] = Field(default=3, ge=1, le=10, description="Nombre de diagnostics à retourner")
@@ -79,9 +73,7 @@ class HealthResponse(BaseModel):
     total_symptoms: int
     total_diseases: int
 
-# ============================================================
-# FONCTIONS UTILITAIRES
-# ============================================================
+
 def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
     """Prédit les maladies probables basées sur les symptômes"""
     
@@ -91,7 +83,7 @@ def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
             detail="Le modèle n'est pas chargé. Vérifiez que le fichier .pkl existe."
         )
     
-    # 1. Normalize list for comparison
+
     available_symptoms_lower = [s.lower() for s in symptoms_list]
     
     valid_symptoms = []
@@ -99,7 +91,7 @@ def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
     
     for sym in symptom_list:
         if sym.lower() in available_symptoms_lower:
-            # Find the exact original case name from the list
+
             idx = available_symptoms_lower.index(sym.lower())
             valid_symptoms.append(symptoms_list[idx])
         else:
@@ -111,12 +103,12 @@ def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
             detail=f"Aucun symptôme valide trouvé parmi: {symptom_list}"
         )
     
-    # 2. Prepare prediction data
+
     patient_df = pd.DataFrame(np.zeros((1, len(symptoms_list))), columns=symptoms_list)
     for sym in valid_symptoms:
         patient_df[sym] = 1
     
-    # 3. Predict
+
     probabilities = model.predict_proba(patient_df)[0]
     top_indices = np.argsort(probabilities)[-top_n:][::-1]
     
@@ -139,9 +131,6 @@ def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
         "timestamp": datetime.now().isoformat()
     }
 
-# ============================================================
-# API ENDPOINTS
-# ============================================================
 
 @app.get("/", tags=["Info"])
 async def root():
@@ -236,9 +225,7 @@ async def search_symptoms(query: str):
         "count": len(matching)
     }
 
-# ============================================================
-# MAIN
-# ============================================================
+
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("🏥 Démarrage du serveur API Diagnostic Médical")
