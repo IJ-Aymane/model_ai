@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 
-print("🔄 Chargement du modèle médical...")
+print(" Chargement du modèle médical...")
 try:
     model_data = joblib.load("bernoulli_nb_medical_model.pkl")
     model = model_data['model']
@@ -32,11 +32,11 @@ try:
     diseases_list = model_data['diseases']
     metrics = model_data['metrics']
     
-    print(f"✅ Modèle chargé: {metrics['accuracy']*100:.1f}% accuracy")
-    print(f"📋 Nombre de symptômes disponibles: {len(symptoms_list)}")
-    print(f"🏥 Nombre de maladies: {len(diseases_list)}")
+    print(f" Modèle chargé: {metrics['accuracy']*100:.1f}% accuracy")
+    print(f" Nombre de symptômes disponibles: {len(symptoms_list)}")
+    print(f" Nombre de maladies: {len(diseases_list)}")
 except FileNotFoundError:
-    print("❌ Erreur: Fichier 'bernoulli_nb_medical_model.pkl' non trouvé!")
+    print(" Erreur: Fichier 'bernoulli_nb_medical_model.pkl' non trouvé!")
     model = None
     le = None
     symptoms_list = []
@@ -136,7 +136,7 @@ def predict_disease_api(symptom_list: List[str], top_n: int = 3) -> Dict:
 async def root():
     """Page d'accueil de l'API"""
     return {
-        "message": "🏥 API Diagnostic Médical",
+        "message": " API Diagnostic Médical",
         "version": "1.0.0",
         "status": "online",
         "docs": "/docs",
@@ -228,11 +228,11 @@ async def search_symptoms(query: str):
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("🏥 Démarrage du serveur API Diagnostic Médical")
+    print(" Démarrage du serveur API Diagnostic Médical")
     print("="*60)
-    print(f"📍 URL: http://127.0.0.1:8000")
-    print(f"📖 Documentation: http://127.0.0.1:8000/docs")
-    print(f"🔬 Modèle: {'Chargé' if model else 'Non chargé'}")
+    print(f" URL: http://127.0.0.1:8000")
+    print(f" Documentation: http://127.0.0.1:8000/docs")
+    print(f" Modèle: {'Chargé' if model else 'Non chargé'}")
     print("="*60 + "\n")
     
     uvicorn.run(app, host="0.0.0.0", port=8000)
