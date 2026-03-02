@@ -12,6 +12,7 @@
    - [Interprétation médicale](#interprétation-médicale)
    - [Limites actuelles](#limites-actuelles)
    - [Améliorations futures](#améliorations-futures)
+5. [Installation et exécution](#installation-et-exécution)
 
 ---
 
@@ -82,7 +83,7 @@ Le diagnostic médical est une tâche de **classification multi-classes** :
 **Protocole expérimental :**
 - Métriques : Accuracy, F1-score pondéré
 - Validation : Stratified Train/Test Split (80/20) + Validation croisée 5-fold
-- Environnement : Python 3.12, scikit-learn 1.3
+- Environnement : Python 3.12, scikit-learn 1.3.2
 
 ---
 
@@ -110,3 +111,22 @@ Le diagnostic médical est une tâche de **classification multi-classes** :
 - Intégration d’un modèle Bayésien naïf structuré (TAN)
 - Utilisation de ComplementNB pour gérer le déséquilibre des classes
 - Mécanisme de fallback vers un médecin en cas de confiance < 50%
+
+---
+
+## Installation et exécution
+
+### Prérequis
+- Python >= 3.12
+- pip installé
+- Fichier `Diseases_and_Symptoms.csv` disponible dans le projet
+
+### Installation des dépendances
+```bash
+# Créer un environnement virtuel (optionnel mais recommandé)
+python -m venv venv
+source venv/bin/activate   # Linux/macOS
+venv\Scripts\activate      # Windows
+
+# Installer les dépendances exactes
+pip install fastapi==0.104.1 uvicorn[standard]==0.24.0 pydantic==2.5.0 joblib==1.3.2 numpy>=1.26.4 pandas==2.1.3 scikit-learn==1.3.2 python-multipart==0.0.6
