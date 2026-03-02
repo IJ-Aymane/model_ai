@@ -15,7 +15,7 @@ print("🏥 ENTRAÎNEMENT BERNOULLINB - DIAGNOSTIC MÉDICAL")
 print("=" * 60)
 
 # 1. Chargement
-print("\n📂 Chargement...")
+print("\n Chargement...")
 df = pd.read_csv("Diseases_and_Symptoms.csv")
 print(f"   • {len(df):,} échantillons")
 print(f"   • {df['diseases'].nunique()} maladies")
@@ -40,16 +40,16 @@ print(f"   • {len(le.classes_)} maladies après filtrage")
 X_train, X_test, y_train, y_test = train_test_split(
     X, y_enc, test_size=0.2, random_state=42, stratify=y_enc
 )
-print(f"\n✂️  Split: {len(X_train):,} train / {len(X_test):,} test")
+print(f"\n  Split: {len(X_train):,} train / {len(X_test):,} test")
 
 # 4. Entraînement
-print("\n⚙️  Entraînement BernoulliNB...")
+print("\n  Entraînement BernoulliNB...")
 start = time.time()
 
 model = BernoulliNB(alpha=1.0)
 model.fit(X_train, y_train)
 
-print(f"   ✅ Terminé en {time.time() - start:.1f}s")
+print(f"    Terminé en {time.time() - start:.1f}s")
 
 # 5. Évaluation
 y_pred = model.predict(X_test)
@@ -61,7 +61,7 @@ print(f"   Accuracy : {accuracy:.4f} ({accuracy*100:.2f}%)")
 print(f"   F1-Score : {f1:.4f}")
 
 # 6. Sauvegarde
-print(f"\n💾 Sauvegarde...")
+print(f"\n Sauvegarde...")
 model_data = {
     "model": model,
     "label_encoder": le,
@@ -80,9 +80,9 @@ joblib.dump(model_data, filename)
 
 
 file_size = os.path.getsize(filename) / (1024 * 1024)
-print(f"   ✅ Modèle sauvegardé: {filename}")
-print(f"   📦 Taille fichier: {file_size:.1f} MB")
+print(f"    Modèle sauvegardé: {filename}")
+print(f"    Taille fichier: {file_size:.1f} MB")
 
 print("\n" + "=" * 60)
-print("✅ ENTRAÎNEMENT TERMINÉ AVEC SUCCÈS")
+print(" ENTRAÎNEMENT TERMINÉ AVEC SUCCÈS")
 print("=" * 60)
